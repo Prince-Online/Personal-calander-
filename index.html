@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunday Marker Calendar with Navigation</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .calendar {
+            max-width: 600px;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .calendar-header h2 {
+            margin: 0;
+            font-size: 24px;
+            color: #333;
+        }
+        .calendar-header button {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 5px;
+            outline: none;
+        }
+        .calendar-header button i {
+            margin-right: 5px;
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+        .day {
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            background: #fafafa;
+        }
+        .header {
+            font-weight: bold;
+            background: #ddd;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+        }
+        .sunday {
+            background: #ffcccc;
+            color: #900;
+            font-weight: bold;
+        }
+        .navigation {
+            text-align: center;
+            margin-top: 20px;
+        }
+        /* Animation for button press effect */
+        .button-clicked {
+            transform: scale(0.95);
+            transition: transform 0.1s ease-in-out;
+        }
+        #nextBtn, #prevBtn {
+        background: #FFA500;
+        border-radius: 125px;
+        padding: 8px;
+        height: 37px;
+        width: 37px;
+        display: flex;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+        box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="calendar" id="calendar">
+        <div class="calendar-header">
+            <button class="prev-btn" id="prevBtn"><span class="material-symbols-outlined">
+            skip_previous
+            </span></button>
+            <h2><span id="calendarTitle"></span></h2>
+            <button class="next-btn" id="nextBtn"><span class="material-symbols-outlined">
+            skip_next
+            </span></button>
+        </div>
+        <div class="calendar-grid" id="calendarGrid">
+            <!-- Calendar days will be inserted here by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        let currentMonth = new Date('2024-06-01'); // Starting month (June 2024)
+        const calendarGrid = document.getElementById('calendarGrid');
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const calendarTitle = document.getElementById('calendarTitle');
+
+        function updateCalendarTitle() {
+            const options = { month: 'long', year: 'numeric' };
+            calendarTitle.textContent = currentMonth.toLocaleDateString('en-US', options);
+        }
+
+        function generateCalendar() {
+            // Clear previous calendar
+            calendarGrid.innerHTML = '';
+
+            const startDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
+            const endDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
+
+            let currentDate = new Date(startDate);
+            while (currentDate <= endDate) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'day';
+                
+                if (currentDate.getDay() === 0) {
+                    dayElement.classList.add('sunday');
+                }
+                
+                dayElement.textContent = currentDate.getDate();
+                calendarGrid.appendChild(dayElement);
+                
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+
+            updateCalendarTitle();
+        }
+
+        generateCalendar();
+
+        nextBtn.addEventListener('click', () => {
+            currentMonth.setMonth(currentMonth.getMonth() + 1);
+            generateCalendar();
+            animateButtonClick(nextBtn);
+        });
+
+        prevBtn.addEventListener('click', () => {
+            currentMonth.setMonth(currentMonth.getMonth() - 1);
+            generateCalendar();
+            animateButtonClick(prevBtn);
+        });
+
+        function animateButtonClick(button) {
+            button.classList.add('button-clicked');
+            setTimeout(() => {
+                button.classList.remove('button-clicked');
+            }, 300); // Adjust the time (in milliseconds) as needed for your animation duration
+        }
+    </script>
+</body>
+</html>
